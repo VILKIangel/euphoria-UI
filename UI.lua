@@ -3,7 +3,7 @@
 -- ============================================
 
 local FrostUI = {}
-FrostUI.Version = "1.0"
+FrostUI.Version = "1.1"
 
 -- Сервисы
 local Players = game:GetService("Players")
