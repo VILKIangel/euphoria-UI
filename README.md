@@ -3,7 +3,7 @@
 -- Installation 
 local Euphoria = loadstring(game:HttpGet("https://raw.githubusercontent.com/VILKIangel/euphoria-UI/refs/heads/main/UI.lua"))()
 ---------------------
--- Creating a Window
+-- Creating a Window |
 local UI = Euphoria:CreateWindow({
     Name = "My Script",  -- Window title
     Size = UDim2.new(0, 800, 0, 600)  -- Width, Height
