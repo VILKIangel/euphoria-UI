@@ -9,18 +9,18 @@ local UI = Euphoria:CreateWindow({
     Size = UDim2.new(0, 800, 0, 600)  -- Width, Height
 })
 ---------------------
--- Creating a Tab
+-- Creating a Tab |
 local tab, layout = UI:CreateTab("Tab Name", "🏠")
 -- Returns: tabContent (frame), tabLayout (UIListLayout)
 ---------------------
--- Button
+-- Button |
 UI:Button(parent, name, icon, callback)
 -- Example:
 UI:Button(layout, "Click Me", "🔘", function()
     print("Button clicked!")
 end)
 ---------------------
--- Toggle
+-- Toggle |
 local toggle = UI:Toggle(parent, name, icon, defaultValue, callback)
 -- Returns: {SetValue, GetValue}
 -- Example:
@@ -30,7 +30,7 @@ end)
 toggle:SetValue(true)  -- Set programmatically
 print(toggle:GetValue())  -- Get current state
 ---------------------
--- Slider
+-- Slider |
 local slider = UI:Slider(parent, name, icon, min, max, default, suffix, callback)
 -- Returns: {SetValue, GetValue}
 -- Example:
@@ -39,7 +39,7 @@ local slider = UI:Slider(layout, "Volume", "🔊", 0, 100, 50, "%", function(val
 end)
 slider:SetValue(75)
 ---------------------
--- Keybind
+-- Keybind |
 local keybind = UI:Keybind(parent, name, defaultKey, callback)
 -- Returns: {GetKey, SetKey}
 -- Example:
@@ -49,21 +49,21 @@ end)
 print(bind:GetKey())  -- Current key
 bind:SetKey(Enum.KeyCode.E)  -- Change key
 ---------------------
--- Label
+-- Label |
 UI:Label(parent, text, color)  -- color is optional
 -- Example:
 UI:Label(layout, "Hello World")
 UI:Label(layout, "Colored Text", Euphoria.Colors.Primary)
 ---------------------
--- Divider
+-- Divider |
 UI:Divider(parent)
 -- Adds a horizontal separator line
 ---------------------
--- Section
+-- Section |
 UI:Section(parent, title)
 -- Adds a section header (uppercase, colored)
 ---------------------
--- Info Box
+-- Info Box |
 UI:Info(parent, text, type)  -- type: "info", "success", "warning", "error"
 -- Example:
 UI:Info(layout, "This is info", "info")
@@ -71,12 +71,12 @@ UI:Info(layout, "Success!", "success")
 UI:Info(layout, "Warning!", "warning")
 UI:Info(layout, "Error!", "error")
 ---------------------
--- Notification
+-- Notification |
 UI:Notify(title, message, duration, type)
 -- Example:
 UI:Notify("Success", "Action completed!", 3, "success")
 ---------------------
--- Colors
+-- Colors |
 Euphoria.Colors = {
     Primary = Color3.fromRGB(180, 130, 255),
     Secondary = Color3.fromRGB(160, 165, 175),
@@ -87,7 +87,7 @@ Euphoria.Colors = {
     Warning = Color3.fromRGB(250, 180, 60),
 }
 ---------------------
--- Methods
+-- Methods |
 UI:SetAccent(color)  -- Change primary color
 UI:Notify(title, msg, duration, type)  -- Show notification
 ---------------------
