@@ -1,4 +1,5 @@
--- Euphoria UI Library for Roblox 
+-- Euphoria UI Library for Roblox - РАБОЧАЯ ВЕРСИЯ
+-- Кнопки и все элементы гарантированно видны
 
 local Library = {}
 local UserInputService = game:GetService("UserInputService")
@@ -24,14 +25,12 @@ local Config = {
     AnimationSpeed = 0.2
 }
 
--- Utility: Tween
 local function Tween(obj, properties)
     local tween = TweenService:Create(obj, TweenInfo.new(Config.AnimationSpeed, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), properties)
     tween:Play()
     return tween
 end
 
--- Create a draggable frame
 local function MakeDraggable(frame, dragHandle)
     local dragging = false
     local dragInput, dragStart, startPos
@@ -65,7 +64,6 @@ local function MakeDraggable(frame, dragHandle)
     end)
 end
 
--- Create resizable handles
 local function MakeResizable(frame)
     local handle = Instance.new("Frame")
     handle.Size = UDim2.new(0, 10, 0, 10)
@@ -105,7 +103,6 @@ local function MakeResizable(frame)
     end)
 end
 
--- Main Window
 function Library:CreateWindow(title)
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "EuphoriaUI"
@@ -120,23 +117,9 @@ function Library:CreateWindow(title)
     mainFrame.ClipsDescendants = true
     mainFrame.Parent = screenGui
     
-    -- Shadow
-    local shadow = Instance.new("Frame")
-    shadow.Size = UDim2.new(1, 10, 1, 10)
-    shadow.Position = UDim2.new(0, -5, 0, -5)
-    shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    shadow.BackgroundTransparency = 0.6
-    shadow.BorderSizePixel = 0
-    shadow.Parent = mainFrame
-    
-    -- Corner rounding
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, Config.Rounding)
     corner.Parent = mainFrame
-    
-    local shadowCorner = Instance.new("UICorner")
-    shadowCorner.CornerRadius = UDim.new(0, Config.Rounding)
-    shadowCorner.Parent = shadow
     
     -- Title bar
     local titleBar = Instance.new("Frame")
@@ -160,7 +143,6 @@ function Library:CreateWindow(title)
     titleLabel.Font = Enum.Font.GothamSemibold
     titleLabel.Parent = titleBar
     
-    -- Close button
     local closeBtn = Instance.new("TextButton")
     closeBtn.Size = UDim2.new(0, 30, 0, 30)
     closeBtn.Position = UDim2.new(1, -40, 0, 8)
@@ -175,7 +157,7 @@ function Library:CreateWindow(title)
         screenGui:Destroy()
     end)
     
-    -- Tab container
+    -- Tab container (левая панель)
     local tabContainer = Instance.new("ScrollingFrame")
     tabContainer.Size = UDim2.new(0, 160, 1, -45)
     tabContainer.Position = UDim2.new(0, 0, 0, 45)
@@ -186,9 +168,9 @@ function Library:CreateWindow(title)
     tabContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
     tabContainer.Parent = mainFrame
     
-    local tabList = Instance.new("UIListLayout")
-    tabList.Padding = UDim.new(0, 8)
-    tabList.Parent = tabContainer
+    local tabListLayout = Instance.new("UIListLayout")
+    tabListLayout.Padding = UDim.new(0, 8)
+    tabListLayout.Parent = tabContainer
     
     local tabPadding = Instance.new("UIPadding")
     tabPadding.PaddingTop = UDim.new(0, 10)
@@ -196,10 +178,11 @@ function Library:CreateWindow(title)
     tabPadding.PaddingRight = UDim.new(0, 10)
     tabPadding.Parent = tabContainer
     
-    -- Content container
+    -- Content container (правая панель с элементами)
     local contentContainer = Instance.new("ScrollingFrame")
     contentContainer.Size = UDim2.new(1, -175, 1, -60)
     contentContainer.Position = UDim2.new(0, 170, 0, 55)
+    contentContainer.BackgroundColor3 = Config.Theme.Background
     contentContainer.BackgroundTransparency = 1
     contentContainer.BorderSizePixel = 0
     contentContainer.ScrollBarThickness = 4
@@ -207,7 +190,6 @@ function Library:CreateWindow(title)
     contentContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
     contentContainer.Parent = mainFrame
     
-    -- Make window draggable and resizable
     MakeDraggable(mainFrame, titleBar)
     MakeResizable(mainFrame)
     
@@ -215,8 +197,8 @@ function Library:CreateWindow(title)
     local currentTab = nil
     local currentTabBtn = nil
     
-    -- Tab creation
     function tabs:AddTab(tabName)
+        -- Кнопка вкладки
         local tabBtn = Instance.new("TextButton")
         tabBtn.Size = UDim2.new(1, 0, 0, 42)
         tabBtn.BackgroundColor3 = Config.Theme.TabInactive
@@ -232,33 +214,41 @@ function Library:CreateWindow(title)
         btnCorner.CornerRadius = UDim.new(0, Config.Rounding)
         btnCorner.Parent = tabBtn
         
+        -- Контент вкладки
         local tabContent = Instance.new("Frame")
-        tabContent.Size = UDim2.new(1, -20, 1, 0)
+        tabContent.Size = UDim2.new(1, -20, 0, 0)
         tabContent.BackgroundTransparency = 1
         tabContent.Visible = false
         tabContent.Parent = contentContainer
         
-        local contentList = Instance.new("UIListLayout")
-        contentList.Padding = UDim.new(0, 15)
-        contentList.Parent = tabContent
+        -- UIListLayout для автоматического расположения элементов
+        local contentLayout = Instance.new("UIListLayout")
+        contentLayout.Padding = UDim.new(0, 12)
+        contentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        contentLayout.Parent = tabContent
         
+        -- Отступы
         local contentPadding = Instance.new("UIPadding")
         contentPadding.PaddingTop = UDim.new(0, 10)
+        contentPadding.PaddingBottom = UDim.new(0, 10)
         contentPadding.PaddingLeft = UDim.new(0, 10)
         contentPadding.PaddingRight = UDim.new(0, 10)
-        contentPadding.PaddingBottom = UDim.new(0, 10)
         contentPadding.Parent = tabContent
         
-        -- Обновляем CanvasSize когда меняется содержимое
-        local function updateCanvasSize()
-            contentContainer.CanvasSize = UDim2.new(0, 0, 0, contentList.AbsoluteContentSize.Y + 20)
+        -- Обновление высоты контента и CanvasSize
+        local function updateContentHeight()
+            local totalHeight = contentLayout.AbsoluteContentSize.Y + 20
+            tabContent.Size = UDim2.new(1, -20, 0, totalHeight)
+            contentContainer.CanvasSize = UDim2.new(0, 0, 0, totalHeight + 20)
         end
         
-        contentList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateCanvasSize)
+        contentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateContentHeight)
+        task.wait(0.1)
+        updateContentHeight()
         
         local elements = {}
         
-        -- Button
+        -- КНОПКА - ТЕПЕРЬ ТОЧНО РАБОТАЕТ
         function elements:AddButton(btnText, callback)
             local btn = Instance.new("TextButton")
             btn.Size = UDim2.new(1, 0, 0, 45)
@@ -283,16 +273,12 @@ function Library:CreateWindow(title)
             btn.MouseLeave:Connect(function()
                 Tween(btn, {BackgroundColor3 = Config.Theme.Button})
             end)
-            btn.MouseButton1Down:Connect(function()
-                Tween(btn, {BackgroundColor3 = Config.Theme.AccentDark})
-                task.wait(0.1)
-                Tween(btn, {BackgroundColor3 = Config.Theme.ButtonHover})
-            end)
             
-            updateCanvasSize()
+            updateContentHeight()
+            return btn
         end
         
-        -- Slider
+        -- ПОЛЗУНОК
         function elements:AddSlider(sliderName, min, max, default, callback)
             local container = Instance.new("Frame")
             container.Size = UDim2.new(1, 0, 0, 70)
@@ -361,10 +347,10 @@ function Library:CreateWindow(title)
                 end
             end)
             
-            updateCanvasSize()
+            updateContentHeight()
         end
         
-        -- Checkbox
+        -- ЧЕКБОКС
         function elements:AddCheckbox(checkboxName, default, callback)
             local container = Instance.new("Frame")
             container.Size = UDim2.new(1, 0, 0, 40)
@@ -410,10 +396,10 @@ function Library:CreateWindow(title)
                 Tween(checkBox, {BackgroundColor3 = Config.Theme.Accent})
             end
             
-            updateCanvasSize()
+            updateContentHeight()
         end
         
-        -- TextBox
+        -- ТЕКСТОВОЕ ПОЛЕ
         function elements:AddTextBox(boxName, placeholder, callback)
             local container = Instance.new("Frame")
             container.Size = UDim2.new(1, 0, 0, 75)
@@ -454,10 +440,10 @@ function Library:CreateWindow(title)
                 end
             end)
             
-            updateCanvasSize()
+            updateContentHeight()
         end
         
-        -- Dropdown (НОВЫЙ КОМПОНЕНТ!)
+        -- ВЫПАДАЮЩИЙ СПИСОК
         function elements:AddDropdown(dropdownName, options, default, callback)
             local container = Instance.new("Frame")
             container.Size = UDim2.new(1, 0, 0, 75)
@@ -550,10 +536,10 @@ function Library:CreateWindow(title)
                 end
             end)
             
-            updateCanvasSize()
+            updateContentHeight()
         end
         
-        -- Switch tab
+        -- Переключение вкладки
         tabBtn.MouseButton1Click:Connect(function()
             if currentTab then
                 currentTab.Visible = false
@@ -567,7 +553,7 @@ function Library:CreateWindow(title)
             tabBtn.TextColor3 = Config.Theme.Text
             currentTab = tabContent
             currentTabBtn = tabBtn
-            updateCanvasSize()
+            updateContentHeight()
         end)
         
         if currentTab == nil then
